@@ -36,21 +36,55 @@ const readFoodbyName = async (req, res) => {
 };
 const createFood = async (req, res) => {
     try {
-        const { addDate, experationDate, name, amount } = req.body;
+        const { addTime, expireTime, name, amount, groupEmoji } = req.body;
         const { data, error } = await supabase
             .from("newAdd")
             .insert({
-                addDate: addDate,
-                experationDate: experationDate,
+                addTime: addTime,
+                expireTime: expireTime,
                 amount: amount,
-                name: name
+                name: name,
+                groupEmoji: groupEmoji
             });
         res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+const updateFood = async (req, res) => {
+    try {
+        const { ID } = req.params;
+        const { addTime, expireTime, name, amount, groupEmoji } = req.body;
+
+        const { data, reeor } = await supabase
+            .from('newAdd')
+            .update({
+                addTime: addTime,
+                expireTime: expireTime,
+                amount: amount,
+                name: name,
+                groupEmoji: groupEmoji
+            })
+            .eq('id', ID)
+        res.status(200).json(data);
+    } catch {
+        res.status(500).json({ message: error.message });
+    }
+};
+const deleteFood = async (req, res) => {
+    try {
+        const { ID } = req.params;
+        const { error } = await supabase
+            .from('newAdd')
+            .delete()
+            .eq('id', ID)
+            res.status(200).send("delete!")
+      
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 module.exports = {
-    readFoods, readFoodbyId, readFoodbyName, createFood
+    readFoods, readFoodbyId, readFoodbyName, createFood, updateFood, deleteFood
 }
